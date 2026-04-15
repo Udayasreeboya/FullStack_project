@@ -1,0 +1,16 @@
+<h2>Your Cart</h2>
+
+{% for item in cart_items %}
+    <p>
+        {{ item.food_item.name }} -
+        {{ item.quantity }} x {{ item.food_item.price }}
+        = {{ item.total_price }}
+
+        <a href="{% url 'remove_from_cart' item.id %}">Remove</a>
+        <a href="{% url 'place_order' %}">
+    <button>Checkout</button>
+</a>
+    </p>
+{% endfor %}
+
+<h3>Total: ₹{{ total }}</h3>
