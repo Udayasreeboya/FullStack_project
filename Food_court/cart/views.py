@@ -6,16 +6,17 @@ from django.http import JsonResponse
 
 from django.http import JsonResponse
 
-def add_to_cart(request, id):
-    if not request.user.is_authenticated:
-        return JsonResponse({"error": "Please login first"})
+# def add_to_cart(request, id):
+#     if not request.user.is_authenticated:
+#         return JsonResponse({"error": "Please login first"})
 
     # your cart logic
 # def add_to_cart(request):
 # @login_required
 # def add_to_cart(request):
 
-def add_to_cart(request):
+
+def add_to_cart(request, food_id):
     if not request.user.is_authenticated:
         return JsonResponse({"message": "Login required"}, status=401)
 
