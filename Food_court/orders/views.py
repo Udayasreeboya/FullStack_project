@@ -41,6 +41,13 @@ from .models import Order
 #     return render(request, 'orders/orders.html', {
 #         'orders': orders
 #     })
+from django.http import JsonResponse
+from .models import Order
+
 def my_orders(request):
+    if not request.user.is_authenticated:
+        return JsonResponse({"message": "Login required"}, status=401)
+
     orders = Order.objects.filter(user=request.user)
-    return ...
+    data = list(orders.values())
+    return JsonResponse(data, safe=False)

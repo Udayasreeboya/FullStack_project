@@ -2,25 +2,16 @@ from django.shortcuts import render, redirect, get_object_or_404
 from menu.models import FoodItem
 from .models import Cart
 from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
 
 @login_required
 # def add_to_cart(request):
 # @login_required
 # def add_to_cart(request):
 
-def add_to_cart(request, food_id):
-    food = get_object_or_404(FoodItem, id=food_id)
-
-    cart_item, created = Cart.objects.get_or_create(
-        user=request.user,
-        food_item=food
-    )
-
-    if not created:
-        cart_item.quantity += 1
-        cart_item.save()
-
-    return redirect('cart')
+def add_to_cart(request):
+    if not request.user.is_authenticated:
+        return JsonResponse({"message": "Login required"}, status=401)
 
 def cart_view(request):
     cart_items = Cart.objects.filter(user=request.user)
