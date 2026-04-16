@@ -12,33 +12,50 @@ def login_view(request):
 
         if user:
             login(request, user)
-            return redirect('/menu/')
+            return redirect('/cart/')
         else:
-            return render(request, 'auth/login.html', {"error": "Invalid credentials"})
+            return render(request, 'auth/login.html', {'error': 'Invalid credentials'})
 
     return render(request, 'auth/login.html')
-
 
 def signup_view(request):
     if request.method == "POST":
         username = request.POST['username']
+        email = request.POST['email']
         password = request.POST['password']
+        confirm = request.POST['confirm']
 
-        User.objects.create_user(username=username, password=password)
-        return redirect('/login/')
+        if password != confirm:
+            return render(request, 'auth/signup.html', {'error': 'Passwords not match'})
+
+        if User.objects.filter(username=username).exists():
+            return render(request, 'auth/signup.html', {'error': 'User already exists'})
+
+        User.objects.create_user(username=username, email=email, password=password)
+
+        return redirect('/auth/login/')
 
     return render(request, 'auth/signup.html')
 
 
-def forgot_password(request):
+def forgot_view(request):
     if request.method == "POST":
         username = request.POST['username']
+        email = request.POST['email']
         password = request.POST['password']
+        confirm = request.POST['confirm']
 
-        user = User.objects.get(username=username)
+        if password != confirm:
+            return render(request, 'auth/forgot.html', {'error': 'Passwords not match'})
+
+        try:
+            user = User.objects.get(username=username, email=email)
+        except User.DoesNotExist:
+            return render(request, 'auth/forgot.html', {'error': 'User not found'})
+
         user.set_password(password)
         user.save()
 
-        return redirect('/login/')
+        return redirect('/auth/login/')
 
     return render(request, 'auth/forgot.html')
