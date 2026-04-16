@@ -44,8 +44,12 @@ from .models import Order
 from django.http import JsonResponse
 from .models import Order
 
-def my_orders(request):
-    if not request.user.is_authenticated:
-        return JsonResponse({"error": "Please login first"})
+# def my_orders(request):
+#     if not request.user.is_authenticated:
+#         return JsonResponse({"error": "Please login first"})
 
+#     orders = Order.objects.filter(user=request.user)
+@login_required(login_url='/admin/login/')
+def my_orders(request):
     orders = Order.objects.filter(user=request.user)
+    return JsonResponse(list(orders.values()), safe=False)

@@ -16,9 +16,22 @@ from django.http import JsonResponse
 # def add_to_cart(request):
 
 
+@login_required(login_url='/admin/login/')
 def add_to_cart(request, food_id):
-    if not request.user.is_authenticated:
-        return JsonResponse({"message": "Login required"}, status=401)
+    food = FoodItem.objects.get(id=food_id)
+
+    Cart.objects.create(
+        user=request.user,
+        food_item=food,
+        quantity=1
+    )
+
+    return JsonResponse({"message": "Added to cart"})
+
+
+# def add_to_cart(request, food_id):
+#     if not request.user.is_authenticated:
+#         return JsonResponse({"message": "Login required"}, status=401)
 
 def cart_view(request):
     cart_items = Cart.objects.filter(user=request.user)
