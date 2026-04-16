@@ -46,8 +46,6 @@ from .models import Order
 
 def my_orders(request):
     if not request.user.is_authenticated:
-        return JsonResponse({"message": "Login required"}, status=401)
+        return JsonResponse({"error": "Please login first"})
 
     orders = Order.objects.filter(user=request.user)
-    data = list(orders.values())
-    return JsonResponse(data, safe=False)

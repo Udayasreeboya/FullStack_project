@@ -4,7 +4,13 @@ from .models import Cart
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 
-@login_required
+from django.http import JsonResponse
+
+def add_to_cart(request, id):
+    if not request.user.is_authenticated:
+        return JsonResponse({"error": "Please login first"})
+
+    # your cart logic
 # def add_to_cart(request):
 # @login_required
 # def add_to_cart(request):
