@@ -5,25 +5,26 @@ from django.contrib.auth import authenticate, login
 
 def login_view(request):
     if request.method == "POST":
-        username = request.POST['username']
-        password = request.POST['password']
+        username = request.POST.get('username')
+        password = request.POST.get('password')
 
         user = authenticate(request, username=username, password=password)
 
         if user:
             login(request, user)
-            return redirect('/cart/')
+            return redirect('/cart/')   # after login go to cart
         else:
             return render(request, 'auth/login.html', {'error': 'Invalid credentials'})
 
     return render(request, 'auth/login.html')
 
+
 def signup_view(request):
     if request.method == "POST":
-        username = request.POST['username']
-        email = request.POST['email']
-        password = request.POST['password']
-        confirm = request.POST['confirm']
+        username = request.POST.get('username')
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        confirm = request.POST.get('confirm')
 
         if password != confirm:
             return render(request, 'auth/signup.html', {'error': 'Passwords not match'})
@@ -40,22 +41,20 @@ def signup_view(request):
 
 def forgot_view(request):
     if request.method == "POST":
-        username = request.POST['username']
-        email = request.POST['email']
-        password = request.POST['password']
-        confirm = request.POST['confirm']
+        username = request.POST.get('username')
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        confirm = request.POST.get('confirm')
 
         if password != confirm:
-            return render(request, 'auth/forgot.html', {'error': 'Passwords not match'})
+            return render(request, 'auth/forgot.html')
 
         try:
             user = User.objects.get(username=username, email=email)
+            user.set_password(password)
+            user.save()
+            return redirect('/auth/login/')
         except User.DoesNotExist:
             return render(request, 'auth/forgot.html', {'error': 'User not found'})
-
-        user.set_password(password)
-        user.save()
-
-        return redirect('/auth/login/')
 
     return render(request, 'auth/forgot.html')
