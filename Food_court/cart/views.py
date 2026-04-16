@@ -16,7 +16,7 @@ from django.http import JsonResponse
 # def add_to_cart(request):
 
 
-@login_required(login_url='/login/')
+@login_required(login_url='/auth/login/')
 def add_to_cart(request, food_id):
     food = FoodItem.objects.get(id=food_id)
 
