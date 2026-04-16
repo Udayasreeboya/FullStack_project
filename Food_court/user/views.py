@@ -1,51 +1,44 @@
-from django.shortcuts import render
-
-# Create your views here.
+from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
-from django.http import JsonResponse
-import json
 from django.contrib.auth import authenticate, login
 
-def signup(request):
-    data = json.loads(request.body)
 
-    username = data['username']
-    password = data['password']
+def login_view(request):
+    if request.method == "POST":
+        username = request.POST['username']
+        password = request.POST['password']
 
-    if User.objects.filter(username=username).exists():
-        return JsonResponse({"error": "User already exists"})
+        user = authenticate(request, username=username, password=password)
 
-    User.objects.create_user(username=username, password=password)
+        if user:
+            login(request, user)
+            return redirect('/menu/')
+        else:
+            return render(request, 'auth/login.html', {"error": "Invalid credentials"})
 
-    return JsonResponse({"message": "Signup successful"})
+    return render(request, 'auth/login.html')
 
 
+def signup_view(request):
+    if request.method == "POST":
+        username = request.POST['username']
+        password = request.POST['password']
 
-def login_user(request):
-    data = json.loads(request.body)
+        User.objects.create_user(username=username, password=password)
+        return redirect('/login/')
 
-    username = data['username']
-    password = data['password']
+    return render(request, 'auth/signup.html')
 
-    user = authenticate(username=username, password=password)
 
-    if user is None:
-        return JsonResponse({"error": "Invalid credentials"})
-
-    login(request, user)
-    return JsonResponse({"message": "Login successful"})
 def forgot_password(request):
-    data = json.loads(request.body)
+    if request.method == "POST":
+        username = request.POST['username']
+        password = request.POST['password']
 
-    username = data['username']
-    new_password = data['new_password']
-
-    try:
         user = User.objects.get(username=username)
-    except User.DoesNotExist:
-        return JsonResponse({"error": "User not found"})
+        user.set_password(password)
+        user.save()
 
-    user.set_password(new_password)
-    user.save()
+        return redirect('/login/')
 
-    return JsonResponse({"message": "Password reset successful"})
+    return render(request, 'auth/forgot.html')
