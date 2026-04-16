@@ -49,7 +49,7 @@ from .models import Order
 #         return JsonResponse({"error": "Please login first"})
 
 #     orders = Order.objects.filter(user=request.user)
-@login_required(login_url='/admin/login/')
+@login_required(login_url='/login/')
 def my_orders(request):
     orders = Order.objects.filter(user=request.user)
     return JsonResponse(list(orders.values()), safe=False)
