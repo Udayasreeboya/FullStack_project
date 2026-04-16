@@ -1,6 +1,12 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from menu.models import FoodItem
 from .models import Cart
+from django.contrib.auth.decorators import login_required
+
+@login_required
+# def add_to_cart(request):
+# @login_required
+# def add_to_cart(request):
 
 def add_to_cart(request, food_id):
     food = get_object_or_404(FoodItem, id=food_id)

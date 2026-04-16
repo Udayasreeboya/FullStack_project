@@ -1,9 +1,10 @@
 from django.shortcuts import render
-
+from django.contrib.auth.decorators import login_required
 # Create your views here.
 from django.shortcuts import redirect
 from cart.models import Cart
 from .models import Order, OrderItem
+@login_required
 
 def place_order(request):
     cart_items = Cart.objects.filter(user=request.user)
@@ -34,9 +35,12 @@ def place_order(request):
 from django.shortcuts import render
 from .models import Order
 
-def my_orders(request):
-    orders = Order.objects.filter(user=request.user).order_by('-created_at')
+# def my_orders(request):
+#     orders = Order.objects.filter(user=request.user).order_by('-created_at')
 
-    return render(request, 'orders/orders.html', {
-        'orders': orders
-    })
+#     return render(request, 'orders/orders.html', {
+#         'orders': orders
+#     })
+def my_orders(request):
+    orders = Order.objects.filter(user=request.user)
+    return ...
