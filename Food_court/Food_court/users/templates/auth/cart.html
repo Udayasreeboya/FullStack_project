@@ -1,0 +1,51 @@
+{% extends 'auth/base.html' %}
+
+{% block content %}
+
+<h2>Your Cart</h2>
+
+<table class="table">
+
+<tr>
+<th>Item</th>
+<th>Price</th>
+<th>Qty</th>
+<th>Total</th>
+<th>Remove</th>
+</tr>
+
+{% for item in cart_items %}
+
+<tr>
+
+<td>{{ item.food_item.name }}</td>
+
+<td>₹ {{ item.food_item.price }}</td>
+
+<td>
+<a href="{% url 'increase' item.id %}">+</a>
+
+{{ item.quantity }}
+
+<a href="{% url 'decrease' item.id %}">-</a>
+</td>
+
+<td>
+₹ {{ item.total }}
+</td>
+
+<td>
+<a href="{% url 'remove' item.id %}">Remove</a>
+</td>
+
+</tr>
+
+{% endfor %}
+
+</table>
+
+<h3>Total Amount : ₹ {{ total }}</h3>
+
+<a href="{% url 'place_order' %}" class="btn">Place Order</a>
+
+{% endblock %}

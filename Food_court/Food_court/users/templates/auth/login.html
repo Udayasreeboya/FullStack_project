@@ -1,0 +1,26 @@
+{% extends 'auth/base.html' %}
+
+{% block content %}
+
+<div class="center-box">
+
+<h2>Login</h2>
+
+<form method="POST">
+{% csrf_token %}
+
+<input type="text" name="username" placeholder="Username">
+
+<input type="password" name="password" placeholder="Password">
+
+<button class="btn">Login</button>
+
+</form>
+
+<br>
+
+<a href="{% url 'signup' %}">Create Account</a>
+
+</div>
+
+{% endblock %}
